@@ -47,4 +47,28 @@ golds_by_event = by_event.Medal.count()
 golds_by_event.sort(ascending=False)
 golds_by_event.head(10)
 
+#country that has won the most gold, silver, and bronze medals?
+medals_by_country = medals_df.groupby(['NOC','Medal']).size()
+# We calculate the medal counts for each group using the resulting DataFrame's size() function, which gives us the number of rows in each group
+medals_by_country.head(10)
+#convert series to data frame
+medals_by_country_df = medals_by_country.unstack()
+medals_by_country_df.head()
 
+#countries with no medals of each color
+medals_by_country_df.fillna(0, inplace=True)
+
+# we use idxmax(), which gives us the index (in this case, the country code) corresponding to the maximum count for each medal color (column in our DataFrame).
+medals_by_country_df.idxmax()
+
+"""
+plotting
+"""
+
+import matplotlib
+%matplotlib inline
+medals_by_country_df.sort('Gold', ascending=False, inplace=True)
+
+#Now we can use the DataFrame plot() function to produce our plot. We plot individual medal counts for the top 15 countries.
+medals_by_country_df[['Gold','Silver','Bronze']][:15]\
+.plot(kind='bar', figsize=(12,10))
